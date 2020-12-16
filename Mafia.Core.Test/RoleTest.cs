@@ -1,5 +1,6 @@
 using Mafia.Core.Network;
 using Mafia.Core.Roles;
+using Mafia.Core.App;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,21 @@ namespace Mafia.Core.Test
         {
             caster.Role = Role.SHERIFF;
             target.Role = Role.TOWNSFOLK;
-            Assert.AreEqual(caster.Role.Abilities.ToList()[0].Exec(caster,target),"No Crime");
+            Assert.AreEqual(caster.Role.Abilities.ToList()[0].Exec(caster, target), "No Crime");
         }
+
+        /*[Test]
+        public void TestLists()
+        {
+            var playerOrderFirst = new List<int>();
+            playerOrderFirst.Add(1);
+            
+            playerOrderFirst.Insert(playerOrderFirst.IndexOf(1), 2);
+            playerOrderFirst.Insert(playerOrderFirst.IndexOf(1), 3);
+            playerOrderFirst.Add(4);
+            playerOrderFirst.Insert(playerOrderFirst.IndexOf(2), 5);
+            playerOrderFirst.Add(6);
+
+        }*/
     }
 }

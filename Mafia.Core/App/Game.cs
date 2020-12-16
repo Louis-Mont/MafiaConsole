@@ -51,6 +51,8 @@ namespace Mafia.Core.App
         /// </summary>
         public static HashSet<Player> ListPlayers { get; private set; }
 
+        private List<(Player, Ability)> nightFlow = new List<(Player, Ability)>();
+
         #region DayNight
         public byte NDays { get; private set; } = 0;
 
@@ -85,7 +87,7 @@ namespace Mafia.Core.App
 
         public bool IsGameStarted { get; set; } = false;
 
-        public Dictionary<Player, sbyte> Votes = new Dictionary<Player, sbyte>();
+        public Dictionary<Player, int> Votes = new Dictionary<Player, int>();
 
         public Game(HashSet<Player> listPlayers)
         {
@@ -104,6 +106,16 @@ namespace Mafia.Core.App
         #region Step by step
         public void Start()
         {
+            foreach (var p in ListPlayers)
+            {
+                foreach (var abil in p.Role.Abilities)
+                {
+                    if (abil.IsNight)
+                    {
+                        nightFlow.Insert(abil.Priority, (p, abil));
+                    }
+                }
+            }
             IsGameStarted = true;
             PreVote();
         }
@@ -149,7 +161,7 @@ namespace Mafia.Core.App
 
         private void Night()
         {
-            var playerOrderFirst = new HashSet<Player>();
+            var playerOrderFirst = new List<(int, Player)>();
             // The player that get their action effectued last, only if the priority of one of the abilities is byte max value
             var playerOrderLast = new HashSet<Player>();
 
@@ -163,7 +175,22 @@ namespace Mafia.Core.App
                     {
                         playerOrderLast.Add(p);
                     }
+                    else
+                    {
+                        playerOrderFirst.Add((abil.Priority, p));
+                    }
                 }
+            }
+            var orderedList = new List<(int, Player)>();
+            foreach (var order in playerOrderFirst)
+            {
+
+            }
+            playerOrderFirst.Sort();
+
+            foreach (var p in playerOrderFirst)
+            {
+
             }
         }
 
@@ -178,7 +205,7 @@ namespace Mafia.Core.App
         }
 
         #endregion
-        
+
         #region InGameFunctions
         private bool IsGameFinished()
         {
@@ -196,8 +223,8 @@ namespace Mafia.Core.App
         private void ResolveVotes()
         {
             IsVotingTime = false;
-            var playersVoted = new Dictionary<Player, sbyte>();
-            sbyte maxVotes = -1;
+            var playersVoted = new Dictionary<Player, int>();
+            int maxVotes = -1;
             foreach (var playerVotes in Votes)
             {
                 if (playerVotes.Value == maxVotes)

@@ -1,4 +1,5 @@
-﻿using Mafia.Core.Roles;
+﻿using Mafia.Core.App;
+using Mafia.Core.Roles;
 using System;
 using System.Collections.Generic;
 using System.Net;
